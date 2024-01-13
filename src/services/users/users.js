@@ -13,12 +13,21 @@ import {
   userQueryResolver
 } from './users.schema.js'
 import { UserService, getOptions } from './users.class.js'
+import { Forbidden } from '@feathersjs/errors'
 
 export const userPath = 'users'
 export const userMethods = ['find', 'get', 'create', 'patch', 'remove']
 
 export * from './users.class.js'
 export * from './users.schema.js'
+
+const verifyCanPerformOperation = async (context) => {
+  const { _id: authenticatedUserId } = context.params.user
+  const { id: targetUserId } = context
+  if (authenticatedUserId !== targetUserId) {
+    throw new Forbidden('You are not authorized to perform this operation on another user')
+  }
+}
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const user = (app) => {
@@ -36,9 +45,9 @@ export const user = (app) => {
       find: [authenticate('jwt')],
       get: [authenticate('jwt')],
       create: [],
-      update: [authenticate('jwt')],
-      patch: [authenticate('jwt')],
-      remove: [authenticate('jwt')]
+      update: [authenticate('jwt'), verifyCanPerformOperation],
+      patch: [authenticate('jwt'), verifyCanPerformOperation],
+      remove: [authenticate('jwt'), verifyCanPerformOperation]
     },
     before: {
       all: [schemaHooks.validateQuery(userQueryValidator), schemaHooks.resolveQuery(userQueryResolver)],
