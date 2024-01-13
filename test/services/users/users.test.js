@@ -13,6 +13,8 @@ const getUrl = (pathname) =>
     pathname
   })
 
+let server = {}
+
 describe("'users' service", () => {
   it('registered the service', () => {
     const service = app.service('users')
@@ -54,10 +56,6 @@ describe('Additional security checks on user endpoints', () => {
     server = app.listen(port)
   })
 
-  // after(async () => {
-  //   server.close()
-  // })
-
   it('should return 403 when user tries to delete another user', async () => {
     const { accessToken } = alice
     const { _id: targetId } = bob
@@ -72,22 +70,6 @@ describe('Additional security checks on user endpoints', () => {
       assert.equal(response.data.message, 'You are not authorized to perform this operation on another user')
     }
   })
-
-  // it('should return 403 when user tries to put another user', async () => {
-  //   try {
-  //     const { accessToken } = bob
-  //     const { _id: targetId } = alice
-  //     const config = { headers: { Authorization: `Bearer ${accessToken}` } }
-  //     const testData = { password: bob.password }
-
-  //     await axios.put(getUrl(`/users/${targetId}`), testData, config)
-  //   } catch (error) {
-  //     const { response } = error
-
-  //     assert.equal(response.status, 403)
-  //     assert.equal(response.data.message, 'You are not authorized to perform this operation on another user')
-  //   }
-  // })
 
   it('should return 403 when user tries to patch another user', async () => {
     try {
