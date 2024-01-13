@@ -1,6 +1,6 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/service.test.html
-const axios = require('axios')
-const url = require('url')
+import axios from 'axios'
+import url from 'url'
 import assert from 'assert'
 import { app } from '../../../src/app.js'
 
