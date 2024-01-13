@@ -34,7 +34,8 @@
     "start": "node src",
     "dev": "nodemon src/",
     "prettier": "npx prettier \"**/*.js\" --write",
-    "mocha": "cross-env NODE_ENV=test mocha test/ --recursive --exit",
+    "clean": "shx rm -rf test/data/",
+    "mocha": "npm run clean && cross-env NODE_ENV=test mocha test/ --recursive --exit",
     "test": "cross-env NODE_ENV=test npm run migrate && npm run mocha",
     "bundle:client": "npm pack --pack-destination ./public",
     "migrate": "knex migrate:latest",
@@ -66,6 +67,7 @@
     "cross-env": "^7.0.3",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.2",
-    "prettier": "^3.2.1"
+    "prettier": "^3.2.1",
+    "shx": "^0.3.4"
   }
 }
